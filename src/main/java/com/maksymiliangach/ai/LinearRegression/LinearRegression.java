@@ -21,17 +21,17 @@ import com.maksymiliangach.ai.Model;
 
 //TODO LinearRegression implements Model
 public class LinearRegression {
-    private double weight;
-    private double bias;
-    private double[] x;
-    private double[] y;
+    private Double weight;
+    private Double bias;
+    private Double[] x;
+    private Double[] y;
 
     public LinearRegression() {
         this.weight = 0.0;
         this.bias = 0.0;
     }
 
-    public void train(double[] x, double[] y, double learningRate, int epochs) {
+    public void train(Double[] x, Double[] y, Double learningRate, int epochs) {
         this.x = x;
         this.y = y;
         int n = x.length;
@@ -44,7 +44,7 @@ public class LinearRegression {
                 double prediction = predict(x[i]);
                 double error = prediction - y[i];
 
-                loss += error * error;
+                loss += (error * error);
                 weightGradient += 2 * error * x[i];
                 biasGradient += 2 * error;
             }
@@ -87,7 +87,8 @@ public class LinearRegression {
         }
     }
 
-    public void plot(){
+    //TODO move those functions away to different class - embrace abstraction, praise API simplicity
+    public void plot(String title, String xAxisLabel, String yAxisLabel){
         JFrame f = new JFrame();
         f.setSize(800, 600);
 
@@ -95,7 +96,7 @@ public class LinearRegression {
         XYDataset scatterDataset = createDataset();
 
         // Create chart
-        JFreeChart chart = ChartFactory.createScatterPlot("Linear Regression", "xAxis", "yAxis", scatterDataset);
+        JFreeChart chart = ChartFactory.createScatterPlot(title, xAxisLabel, yAxisLabel, scatterDataset);
         XYPlot plot = chart.getXYPlot();
 
         // Create regression line dataset
