@@ -19,7 +19,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.maksymiliangach.ai.Model;
 
-//TODO LinearRegression implements Model
 public class LinearRegression {
     private Double weight;
     private Double bias;
