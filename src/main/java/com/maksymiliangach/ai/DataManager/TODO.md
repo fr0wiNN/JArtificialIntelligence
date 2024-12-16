@@ -7,3 +7,5 @@
 - [ ] add optional head length
 - [ ] add getters for dimensions
 - [ ] refactor code
+- [ ] make `drop()` method for dropping columns
+- [ ] make `addColumn()` method for feature engineering
