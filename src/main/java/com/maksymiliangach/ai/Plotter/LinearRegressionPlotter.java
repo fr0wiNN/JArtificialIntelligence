@@ -8,15 +8,21 @@ import javax.swing.*;
 public class LinearRegressionPlotter {
 
     private XYChart chart;
+    private SwingWrapper<XYChart> chartWrapper;
+    private LinearRegression model;
     public LinearRegressionPlotter(LinearRegression lr) {
-        //super("Linear Regression", 800, 600);
-        chart = createChart(lr);
-        new SwingWrapper(chart).displayChart();
+        this.model = lr;
     }
 
-    private XYChart createChart(LinearRegression lr){
-        double[] x = java.util.Arrays.stream(lr.getX()).mapToDouble(Double::doubleValue).toArray();
-        double[] y = java.util.Arrays.stream(lr.getY()).mapToDouble(Double::doubleValue).toArray();
+    public void init(){
+        chart = createChart();
+        chartWrapper = new SwingWrapper<>(chart);
+        chartWrapper.displayChart();
+    }
+
+    private XYChart createChart(){
+        double[] x = java.util.Arrays.stream(model.getX()).mapToDouble(Double::doubleValue).toArray();
+        double[] y = java.util.Arrays.stream(model.getY()).mapToDouble(Double::doubleValue).toArray();
         XYChart xyChart = new XYChartBuilder()
                 .width(800)
                 .height(600)
@@ -30,6 +36,25 @@ public class LinearRegressionPlotter {
         xyChart.addSeries("Points", x, y);
         //
         return xyChart;
+    }
+
+    public void update(){
+        double[] x = java.util.Arrays.stream(model.getX()).mapToDouble(Double::doubleValue).toArray();
+        double[] y = java.util.Arrays.stream(model.getY()).mapToDouble(Double::doubleValue).toArray();
+
+        double[] lineX = x;
+        double[] lineY = new double[lineX.length];
+        for(int i = 0 ; i < lineX.length; i++) {
+            lineY[i] = model.getWeight() * lineX[i] + model.getBias();
+        }
+
+        if (chart.getSeriesMap().containsKey("Regression Line")) {
+            chart.updateXYSeries("Regression Line", lineX, lineY, null);
+        } else {
+            chart.addSeries("Regression Line", lineX, lineY);
+        }
+
+        chartWrapper.repaintChart();
     }
 
 }
