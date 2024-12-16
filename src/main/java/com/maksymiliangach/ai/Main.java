@@ -20,11 +20,14 @@ public class Main {
         for(int i = 0 ; i < xTemp.length ; i++) { x[0][i] = xTemp[i];}
 
 
-        LinearRegression model = new LinearRegression(0.000001, 10_000_000);
-        LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
-        model.setPlotter(plotter);
+        LinearRegression model = new LinearRegression(0.0005, 100);
+        //LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
+        //model.setPlotter(plotter);
 
         model.train(x, y);
+        System.out.println(model.summary());
+        System.out.println(Double.MAX_VALUE); // I suppose that loss reached its maximum
+        //model.test(x, y);
 
     }
 }

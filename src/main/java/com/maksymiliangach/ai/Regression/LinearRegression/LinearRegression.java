@@ -28,14 +28,23 @@ public class LinearRegression implements RegressionModel {
         this.epochs = epochs;
     }
 
+    public void test(double[][] inputs, double[] outputs){
+
+        this.inputs = inputs;
+        this.outputs = outputs;
+
+        setUpTraining();
+        System.out.printf("Number of samples: %d\nNumber of features: %d" , numSamples, numFeatures);
+    }
+
     @Override
     public double[] forward(double[][] inputs) {
         double[] predictions = new double[numSamples];
 
-        for (int i = 0; i < numSamples; i++) {
+        for (int i = 0; i < numFeatures; i++) {
             double prediction = bias;
-            for (int j = 0 ; j < numFeatures ; j++) {
-                prediction += weights[j] * inputs[i][j];
+            for (int j = 0 ; j < numSamples ; j++) {
+                prediction += weights[i] * inputs[i][j];
             }
             predictions[i] = prediction;
         }
@@ -49,16 +58,30 @@ public class LinearRegression implements RegressionModel {
         double[] weightGradients = new double[numFeatures];
         double biasGradient = 0;
 
-        // Calculate total loss values
-        long loss = computeLoss(outputs, predictions);
+        // Compute gradients
+        for (int s = 0; s < numSamples; s++) {
+            double error = predictions[s] - outputs[s];
 
-        // Set gradients (Make it set gradients based on total loss function, since backward function is outside of scope for normalization after each epoch)
-        for (int i = 0; i < numFeatures; i++) {
-            weightGradients[i] = 2 * loss * inputs[i][i];
+            // Update gradients for each feature
+            for (int f = 0; f < numFeatures; f++) {
+                weightGradients[f] += 2 * error * inputs[f][s];
+            }
+
+            // Update bias gradient
+            biasGradient -= 2 * error;
         }
-        biasGradient += 2 * loss;
 
-        // Update weights and bias
+        // Normalize gradients
+        for (int f = 0; f < numFeatures; f++) {
+            weightGradients[f] /= numSamples;
+        }
+        biasGradient /= numSamples;
+
+        // Update weights and bias using gradient descent
+        for (int f = 0; f < numFeatures; f++) {
+            weights[f] -= learningRate * weightGradients[f];
+        }
+        bias -= learningRate * biasGradient;
     }
 
     @Override
@@ -107,8 +130,8 @@ public class LinearRegression implements RegressionModel {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (epoch % 100 == 0) {
-                System.out.printf("Epoch %d: Loss = %d", epoch, computeLoss(outputs, predictions));
+            if (epoch % 1 == 0) {
+                System.out.printf("Epoch %d: Loss = %d\n", epoch, computeLoss(outputs, predictions));
                 if (plotter != null) { plotter.update(); }
             }
         }
@@ -117,7 +140,8 @@ public class LinearRegression implements RegressionModel {
     @Override
     public String summary() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Linear Regression Mode:\n");
+        sb.append("========================\n");
+        sb.append("Linear Regression Model:\n");
         sb.append("Epochs: ").append(epochs).append("\n");
         sb.append("Learning Rate: ").append(learningRate).append("\n");
         sb.append("Weights: ").append(Arrays.toString(weights)).append("\n");
