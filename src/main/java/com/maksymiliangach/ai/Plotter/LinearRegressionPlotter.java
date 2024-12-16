@@ -31,9 +31,9 @@ public class LinearRegressionPlotter {
                 .yAxisTitle("Y")
                 .build();
 
-        xyChart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
+        //xyChart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
 
-        xyChart.addSeries("Points", x, y);
+        xyChart.addSeries("Points", x, y).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
         //
         return xyChart;
     }
@@ -49,9 +49,9 @@ public class LinearRegressionPlotter {
         }
 
         if (chart.getSeriesMap().containsKey("Regression Line")) {
-            chart.updateXYSeries("Regression Line", lineX, lineY, null);
+            chart.updateXYSeries("Regression Line", lineX, lineY, null).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         } else {
-            chart.addSeries("Regression Line", lineX, lineY);
+            chart.addSeries("Regression Line", lineX, lineY).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         }
 
         chartWrapper.repaintChart();
