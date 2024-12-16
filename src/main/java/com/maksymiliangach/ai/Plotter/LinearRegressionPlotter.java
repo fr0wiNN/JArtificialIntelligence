@@ -4,6 +4,8 @@ import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import java.util.List;
+
 public class LinearRegressionPlotter extends Plotter{
 
     private XYChart chart;
@@ -13,16 +15,18 @@ public class LinearRegressionPlotter extends Plotter{
         this.model = lr;
     }
 
-    public void init(){
-        chart = createChart();
-        chartWrapper = new SwingWrapper<>(chart);
-        chartWrapper.displayChart();
+    public void init(int numFeature){
+        if (numFeature == 1) {
+            chart = createChart();
+            chartWrapper = new SwingWrapper<>(chart);
+            chartWrapper.displayChart();
+        }
     }
 
     private XYChart createChart(){
-        double[] x = new double[model.getInputs().length];
+        double[] x = new double[model.getInputs()[0].length];
         for (int i = 0; i < x.length; i++) {
-            x[i] = model.getInputs()[i][0];
+            x[i] = model.getInputs()[0][i];
         }
         double[] y = model.getOutputs();
         XYChart xyChart = new XYChartBuilder()
@@ -33,17 +37,15 @@ public class LinearRegressionPlotter extends Plotter{
                 .yAxisTitle("Y")
                 .build();
 
-        //xyChart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
-
         xyChart.addSeries("Points", x, y).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
-        //
+
         return xyChart;
     }
 
     public void update(){
-        double[] x = new double[model.getInputs().length];
+        double[] x = new double[model.getInputs()[0].length];
         for (int i = 0; i < x.length; i++) {
-            x[i] = model.getInputs()[i][0];
+            x[i] = model.getInputs()[0][i];
         }
 
         double minX = java.util.Arrays.stream(x).min().orElse(0);
@@ -57,14 +59,14 @@ public class LinearRegressionPlotter extends Plotter{
 
         if (chart.getSeriesMap().containsKey("Regression Line")) {
             chart.updateXYSeries("Regression Line", lineX, lineY, null)
-                 .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
-                 .setMarker(SeriesMarkers.NONE)
-                 .setLineColor(lineColor);
+                    .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                    .setMarker(SeriesMarkers.NONE)
+                    .setLineColor(lineColor);
         } else {
             chart.addSeries("Regression Line", lineX, lineY)
-                 .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
-                 .setMarker(SeriesMarkers.NONE)
-                 .setLineColor(lineColor);
+                    .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                    .setMarker(SeriesMarkers.NONE)
+                    .setLineColor(lineColor);
         }
 
         chartWrapper.repaintChart();

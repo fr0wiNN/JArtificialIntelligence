@@ -30,15 +30,6 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         this.epochs = epochs;
     }
 
-    public void test(double[][] inputs, double[] outputs){
-
-        this.inputs = inputs;
-        this.outputs = outputs;
-
-        setUpTraining();
-        System.out.printf("Number of samples: %d\nNumber of features: %d" , numSamples, numFeatures);
-    }
-
     @Override
     public double[] forward(double[][] inputs) {
         double[] predictions = new double[numSamples];
@@ -58,6 +49,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     public void backward(double[][] inputs, double[] outputs, double[] predictions) {
         // Gradient initialization
         double[] weightGradients = new double[numFeatures];
+        for (double w : weightGradients) {w = 0;}
         double biasGradient = 0;
 
         // Compute gradients
@@ -86,7 +78,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         bias -= learningRate * biasGradient;
 
         //TODO: have a logging variable for gradient diagnostics
-        if(logging && false){
+        if(logging){
             StringBuilder sb = new StringBuilder();
             sb.append("> Weights Gradients: ").append(Arrays.toString(weightGradients)).append("\n");
             sb.append("> Bias Gradient: ").append(biasGradient).append("\n");
@@ -95,11 +87,11 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     }
 
     @Override
-    public long computeLoss(double[] yTrue, double[] yPredicted) {
-        long loss = 0;
+    public double computeLoss(double[] yTrue, double[] yPredicted) {
+        double loss = 0;
         for (int i = 0; i < yTrue.length; i++) {
             double error = yPredicted[i] - yTrue[i];
-            loss += (long) (error * error);
+            loss += (error * error);
         }
         return loss/yTrue.length;
     }
@@ -114,15 +106,19 @@ public class LinearRegression implements RegressionModel, ModelLogger {
 
     public void setPlotter(LinearRegressionPlotter plotter) {
         //TODO: if(numFeatures == plotter.numFeatures) - make sure that the plotter supports 3D rendering
-        if(numFeatures == 1) { this.plotter = plotter; }
+        this.plotter = plotter;
     }
 
     private void setUpTraining() {
         this.numSamples = inputs[0].length;
         this.numFeatures = inputs.length;
+
+        // Weights initialization
         this.weights = new double[numFeatures];
-        for(double w : weights) { w = 1.0; }
-        this.bias = 0.0;
+        for(double w : weights) { w = Math.random() * 0.01; }
+        this.bias = 0;
+
+        if (plotter!=null) plotter.init(numFeatures);
     }
 
     @Override
@@ -133,6 +129,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         setUpTraining();
 
         for(int epoch = 0 ; epoch < epochs ; epoch++) {
+
             // Forward pass
             double[] predictions = forward(inputs);
 
@@ -140,8 +137,8 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (logging && epoch % 10_000 == 0) {
-                System.out.printf("Epoch %d: Loss = %d\n", epoch, computeLoss(outputs, predictions));
+            if (logging && epoch % 1 == 0) {
+                System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions));
                 if (plotter != null) { plotter.update(); }
             }
         }

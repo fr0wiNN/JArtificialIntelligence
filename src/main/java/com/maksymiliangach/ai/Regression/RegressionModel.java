@@ -8,7 +8,7 @@ public interface RegressionModel extends Model{
     void train(double[][] inputs, double[] outputs);
     double[] forward(double[][] inputs);
     void backward(double[][] inputs, double[] outputs, double[] predictions);
-    long computeLoss(double[] yTrue, double[] yPredicted);
+    double computeLoss(double[] yTrue, double[] yPredicted);
     double[] getWeights();
     double getBias();
 }

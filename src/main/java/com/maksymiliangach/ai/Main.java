@@ -18,16 +18,14 @@ public class Main {
         double[] x1Temp = java.util.Arrays.stream(X1).mapToDouble(Double::doubleValue).toArray();
         double[] x2Temp = java.util.Arrays.stream(X2).mapToDouble(Double::doubleValue).toArray();
         double[] y = java.util.Arrays.stream(Y).mapToDouble(Double::doubleValue).toArray();
-        double[][] x = new double[2][x1Temp.length];
-        for(int i = 0 ; i < x1Temp.length ; i++) { x[0][i] = x1Temp[i]; x[1][i] = x2Temp[i];}
+        double[][] x = new double[1][x1Temp.length];
+        for(int i = 0 ; i < x1Temp.length ; i++) { x[0][i] = x1Temp[i]; }//x[1][i] = x2Temp[i];}
 
-
-        LinearRegression model = new LinearRegression(0.0000000950, 1_000_000);
+        LinearRegression model = new LinearRegression(0.01, 200);
         //LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         //model.setPlotter(plotter);
         model.setLogging(true);
         model.train(x, y);
-        System.out.println(model.summary());
         //model.test(x, y);
     }
 }
