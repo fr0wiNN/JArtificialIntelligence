@@ -21,11 +21,11 @@ public class Main {
         double[][] x = new double[1][x1Temp.length];
         for(int i = 0 ; i < x1Temp.length ; i++) { x[0][i] = x1Temp[i]; }//x[1][i] = x2Temp[i];}
 
-        LinearRegression model = new LinearRegression(0.01, 200);
-        //LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
-        //model.setPlotter(plotter);
+        LinearRegression model = new LinearRegression(0.00001, 100_000_000);
+        LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
+        model.setPlotter(plotter);
         model.setLogging(true);
         model.train(x, y);
-        //model.test(x, y);
+        System.out.println(model.summary());
     }
 }

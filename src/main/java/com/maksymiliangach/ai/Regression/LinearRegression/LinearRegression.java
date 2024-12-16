@@ -49,7 +49,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     public void backward(double[][] inputs, double[] outputs, double[] predictions) {
         // Gradient initialization
         double[] weightGradients = new double[numFeatures];
-        for (double w : weightGradients) {w = 0;}
+        for (int w = 0 ; w < numFeatures ; w++) { weightGradients[w] = 0;}
         double biasGradient = 0;
 
         // Compute gradients
@@ -75,10 +75,10 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         for (int f = 0; f < numFeatures; f++) {
             weights[f] -= learningRate * weightGradients[f];
         }
-        bias -= learningRate * biasGradient;
+        bias += learningRate * biasGradient;
 
         //TODO: have a logging variable for gradient diagnostics
-        if(logging){
+        if(logging && false){
             StringBuilder sb = new StringBuilder();
             sb.append("> Weights Gradients: ").append(Arrays.toString(weightGradients)).append("\n");
             sb.append("> Bias Gradient: ").append(biasGradient).append("\n");
@@ -115,7 +115,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
 
         // Weights initialization
         this.weights = new double[numFeatures];
-        for(double w : weights) { w = Math.random() * 0.01; }
+        for (int w = 0 ; w < numFeatures ; w++) { this.weights[w] = Math.random() * 0.01;}
         this.bias = 0;
 
         if (plotter!=null) plotter.init(numFeatures);
@@ -137,7 +137,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (logging && epoch % 1 == 0) {
+            if (logging && epoch % 100_000 == 0) {
                 System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions));
                 if (plotter != null) { plotter.update(); }
             }
