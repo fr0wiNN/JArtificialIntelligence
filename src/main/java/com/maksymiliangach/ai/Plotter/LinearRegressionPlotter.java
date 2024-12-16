@@ -20,8 +20,11 @@ public class LinearRegressionPlotter extends Plotter{
     }
 
     private XYChart createChart(){
-        double[] x = java.util.Arrays.stream(model.getX()).mapToDouble(Double::doubleValue).toArray();
-        double[] y = java.util.Arrays.stream(model.getY()).mapToDouble(Double::doubleValue).toArray();
+        double[] x = new double[model.getInputs().length];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = model.getInputs()[i][0];
+        }
+        double[] y = model.getOutputs();
         XYChart xyChart = new XYChartBuilder()
                 .width(800)
                 .height(600)
@@ -38,12 +41,16 @@ public class LinearRegressionPlotter extends Plotter{
     }
 
     public void update(){
-        double[] x = java.util.Arrays.stream(model.getX()).mapToDouble(Double::doubleValue).toArray();
+        double[] x = new double[model.getInputs().length];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = model.getInputs()[i][0];
+        }
+
         double minX = java.util.Arrays.stream(x).min().orElse(0);
         double maxX = java.util.Arrays.stream(x).max().orElse(1);
 
-        double minY = model.predict(minX);
-        double maxY = model.predict(maxX);
+        double minY = minX * model.getWeights()[0] + model.getBias();
+        double maxY = maxX * model.getWeights()[0] + model.getBias();
 
         double[] lineX = {minX, maxX};
         double[] lineY = {minY, maxY};

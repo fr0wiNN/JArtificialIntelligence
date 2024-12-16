@@ -4,9 +4,9 @@ import com.maksymiliangach.ai.Model;
 
 import java.io.Serializable;
 
-public interface RegressionModel extends Serializable {
-    void forward(double[][] inputs);
-    void backward(double[][] inputs, double[] outputs, double learningRate);
+public interface RegressionModel extends Model {
+    double[] forward(double[][] inputs);
+    void backward(double[][] inputs, double[] outputs);
     double computeLoss(double[] yTrue, double[] yPredicted);
     double[] getWeights();
     double getBias();

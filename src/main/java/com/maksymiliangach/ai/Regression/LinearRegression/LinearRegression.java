@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.swing.JFrame;
 
 import com.maksymiliangach.ai.Model;
@@ -12,69 +13,28 @@ import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
 import com.maksymiliangach.ai.Regression.RegressionModel;
 
 public class LinearRegression implements RegressionModel {
-    private Double weight;
-    private Double bias;
-    private Double[] x;
-    private Double[] y;
+    private double learningRate;
+    private int epochs;
+    private double[] weights;
+    private double bias;
+    private double[][] inputs; // [i][j]: i feature contains j samples
+    private double[] outputs; // [i]: i contains true value for given features
+    private int numSamples;
+    private int numFeatures;
     private LinearRegressionPlotter plotter;
 
-    public LinearRegression() {
-        this.weight = 1.0;
-        this.bias = 0.0;
-    }
-
-    public void train(Double[] x, Double[] y, Double learningRate, int epochs) {
-        this.x = x;
-        this.y = y;
-        int n = x.length;
-
-        if(plotter != null){plotter.init();}
-
-        for (int epoch = 0; epoch < epochs; epoch++){
-            double weightGradient = 0;
-            double biasGradient = 0;
-            long loss = 0;
-
-            for (int i = 0; i < n; i++){
-                double prediction = predict(x[i]);
-
-                double error = prediction - y[i];
-
-                loss += (long) (error * error);
-
-                // Updating gradients
-                weightGradient += 2 * error * x[i];
-                biasGradient += 2 * error;
-            }
-
-            //Normalize loss and gradients for weight and bias
-            loss /= n;
-            weightGradient /= n;
-            biasGradient /= n;
-
-            weight -= learningRate * weightGradient; // Updating weight by a weightGradient
-            bias -= learningRate * biasGradient; // Updating bias by a biasGradient
-
-            if (epoch % 100 == 0) {
-                System.out.printf("Epoch %d: Loss = %d, Weight Gradient = %.4f, Bias Gradient = %.4f%n\n", epoch, loss, weightGradient, biasGradient);
-                if(plotter != null) {plotter.update();}
-            }
-        }
-    }
-
-    public double predict(double input) {
-        return (weight * input) + bias;
-    }
-
-    public double getWeight(){ return weight;}
-
-    @Override
-    public void forward(double[][] inputs) {
-
+    public LinearRegression(double learningRate, int epochs) {
+        this.learningRate = learningRate;
+        this.epochs = epochs;
     }
 
     @Override
-    public void backward(double[][] inputs, double[] outputs, double learningRate) {
+    public double[] forward(double[][] inputs) {
+        return new double[0];
+    }
+
+    @Override
+    public void backward(double[][] inputs, double[] outputs) {
 
     }
 
@@ -85,12 +45,50 @@ public class LinearRegression implements RegressionModel {
 
     @Override
     public double[] getWeights() {
-        return new double[0];
+        return weights;
     }
 
-    public double getBias(){ return bias;}
+    @Override
+    public double getBias() {return bias;}
 
-    public Double[] getX(){ return x;}
-    public Double[] getY(){ return y;}
-    public void setPlotter(LinearRegressionPlotter plotter){this.plotter = plotter;}
+    public void setPlotter(LinearRegressionPlotter plotter) {this.plotter = plotter;}
+
+    private void setUpTraining() {
+        this.numSamples = inputs.length;
+        this.numFeatures = inputs.length;
+        this.weights = new double[numFeatures];
+        for(double w : weights) { w = 1; }
+        this.bias = 0;
+    }
+
+    @Override
+    public void train(double[][] inputs, double[] outputs) {
+        this.inputs = inputs;
+        this.outputs = outputs;
+
+        setUpTraining();
+
+        for(int epoch = 0 ; epoch < epochs ; epoch++) {
+
+        }
+    }
+
+    @Override
+    public String summary() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Linear Regression Mode:\n");
+        sb.append("Epochs: ").append(epochs).append("\n");
+        sb.append("Learning Rate: ").append(learningRate).append("\n");
+        sb.append("Weights: ").append(Arrays.toString(weights)).append("\n");
+        sb.append("Bias: ").append(bias).append("\n");
+        return sb.toString();
+    }
+
+    public double[][] getInputs() {
+        return inputs;
+    }
+
+    public double[] getOutputs() {
+        return outputs;
+    }
 }

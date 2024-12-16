@@ -10,14 +10,21 @@ import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 public class Main {
     public static void main(String[] args) throws IOException{
         JDataFrame df = JDataFrame.loadCSV("src/main/java/com/maksymiliangach/ai/DataManager/real_estate_dataset.csv");
-        Double[] x = df.getColumn(1);
-        Double[] y = df.getColumn(11);
+        //TODO: make method `getColumns(arg 1, ..., arg n)` which returns double[i][j], where i is a feature and j is sample of feature i
+        Double[] X = df.getColumn(1);
+        Double[] Y = df.getColumn(11);
+        //TODO: make JDataFrame return double[] variables not Double[] wrapper class
+        double[] xTemp = java.util.Arrays.stream(X).mapToDouble(Double::doubleValue).toArray();
+        double[] y = java.util.Arrays.stream(Y).mapToDouble(Double::doubleValue).toArray();
+        double[][] x = new double[1][xTemp.length];
+        for(int i = 0 ; i < xTemp.length ; i++) { x[0][i] = xTemp[i];}
 
-        LinearRegression model = new LinearRegression();
+
+        LinearRegression model = new LinearRegression(0.000001, 10_000_000);
         LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         model.setPlotter(plotter);
 
-        model.train(x, y, 0.00001, 10_000_000);
+        model.train(x, y);
 
     }
 }
