@@ -1,9 +1,9 @@
 package com.maksymiliangach.ai;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public interface Model {
-    public void save(String fileName) throws IOException;
-    public Model load(String fileName) throws IOException;
-    public void plot();
+public interface Model extends Serializable {
+    void train(double[][] inputs, double[] outputs);
+    default String summary() { return "Generic Model"; }
 }

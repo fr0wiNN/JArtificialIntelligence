@@ -1,4 +1,4 @@
-package com.maksymiliangach.ai.LinearRegression;
+package com.maksymiliangach.ai.Regression.LinearRegression;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,8 +9,9 @@ import javax.swing.JFrame;
 
 import com.maksymiliangach.ai.Model;
 import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
+import com.maksymiliangach.ai.Regression.RegressionModel;
 
-public class LinearRegression {
+public class LinearRegression implements RegressionModel {
     private Double weight;
     private Double bias;
     private Double[] x;
@@ -66,6 +67,27 @@ public class LinearRegression {
     }
 
     public double getWeight(){ return weight;}
+
+    @Override
+    public void forward(double[][] inputs) {
+
+    }
+
+    @Override
+    public void backward(double[][] inputs, double[] outputs, double learningRate) {
+
+    }
+
+    @Override
+    public double computeLoss(double[] yTrue, double[] yPredicted) {
+        return 0;
+    }
+
+    @Override
+    public double[] getWeights() {
+        return new double[0];
+    }
+
     public double getBias(){ return bias;}
 
     public Double[] getX(){ return x;}

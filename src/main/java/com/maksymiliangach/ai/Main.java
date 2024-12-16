@@ -1,13 +1,11 @@
 package com.maksymiliangach.ai;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Random;
 
 import com.maksymiliangach.ai.DataManager.JDataFrame;
-import com.maksymiliangach.ai.LinearRegression.*;
+import com.maksymiliangach.ai.Regression.*;
 import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
-import com.maksymiliangach.ai.Plotter.Plotter;
+import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 
 public class Main {
     public static void main(String[] args) throws IOException{

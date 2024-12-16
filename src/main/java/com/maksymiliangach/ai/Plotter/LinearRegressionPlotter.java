@@ -1,11 +1,8 @@
 package com.maksymiliangach.ai.Plotter;
 
-import com.maksymiliangach.ai.LinearRegression.LinearRegression;
+import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class LinearRegressionPlotter extends Plotter{
 
