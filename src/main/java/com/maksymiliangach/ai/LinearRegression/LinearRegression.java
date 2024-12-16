@@ -30,28 +30,32 @@ public class LinearRegression {
         if(plotter != null){plotter.init();}
 
         for (int epoch = 0; epoch < epochs; epoch++){
-            double weightGradient = 0.0;
-            double biasGradient = 0.0;
-            double loss = 0.0;
+            double weightGradient = 0;
+            double biasGradient = 0;
+            long loss = 0;
 
             for (int i = 0; i < n; i++){
                 double prediction = predict(x[i]);
+
                 double error = prediction - y[i];
 
-                loss += (error * error);
+                loss += (long) (error * error);
+
                 // Updating gradients
                 weightGradient += 2 * error * x[i];
                 biasGradient += 2 * error;
             }
 
-            // Normalizing loss
+            //Normalize loss and gradients for weight and bias
             loss /= n;
+            weightGradient /= n;
+            biasGradient /= n;
 
-            weight -= learningRate * (weightGradient / n);
-            bias -= learningRate * (biasGradient / n);
+            weight -= learningRate * weightGradient; // Updating weight by a weightGradient
+            bias -= learningRate * biasGradient; // Updating bias by a biasGradient
 
             if (epoch % 100 == 0) {
-                System.out.printf("Epoch %d: Loss = %.4f%n, Weight Gradient = %.4f, Bias Gradient = %.4f%n\n", epoch, loss, weightGradient, biasGradient);
+                System.out.printf("Epoch %d: Loss = %d, Weight Gradient = %.4f, Bias Gradient = %.4f%n\n", epoch, loss, weightGradient, biasGradient);
                 if(plotter != null) {plotter.update();}
             }
         }

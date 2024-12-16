@@ -2,10 +2,12 @@ package com.maksymiliangach.ai.Plotter;
 
 import com.maksymiliangach.ai.LinearRegression.LinearRegression;
 import org.knowm.xchart.*;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class LinearRegressionPlotter {
+public class LinearRegressionPlotter extends Plotter{
 
     private XYChart chart;
     private SwingWrapper<XYChart> chartWrapper;
@@ -40,18 +42,25 @@ public class LinearRegressionPlotter {
 
     public void update(){
         double[] x = java.util.Arrays.stream(model.getX()).mapToDouble(Double::doubleValue).toArray();
-        double[] y = java.util.Arrays.stream(model.getY()).mapToDouble(Double::doubleValue).toArray();
+        double minX = java.util.Arrays.stream(x).min().orElse(0);
+        double maxX = java.util.Arrays.stream(x).max().orElse(1);
 
-        double[] lineX = x;
-        double[] lineY = new double[lineX.length];
-        for(int i = 0 ; i < lineX.length; i++) {
-            lineY[i] = model.getWeight() * lineX[i] + model.getBias();
-        }
+        double minY = model.predict(minX);
+        double maxY = model.predict(maxX);
+
+        double[] lineX = {minX, maxX};
+        double[] lineY = {minY, maxY};
 
         if (chart.getSeriesMap().containsKey("Regression Line")) {
-            chart.updateXYSeries("Regression Line", lineX, lineY, null).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+            chart.updateXYSeries("Regression Line", lineX, lineY, null)
+                 .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                 .setMarker(SeriesMarkers.NONE)
+                 .setLineColor(lineColor);
         } else {
-            chart.addSeries("Regression Line", lineX, lineY).setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+            chart.addSeries("Regression Line", lineX, lineY)
+                 .setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line)
+                 .setMarker(SeriesMarkers.NONE)
+                 .setLineColor(lineColor);
         }
 
         chartWrapper.repaintChart();
