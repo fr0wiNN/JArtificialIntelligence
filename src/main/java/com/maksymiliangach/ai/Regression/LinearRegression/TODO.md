@@ -1,5 +1,7 @@
 # LinearRegression Package TODO List
 
+- [ ] fix issue of exploding `Loss`
+- [ ] make abstract class `JModel` with default serialization **and** make all models extend this class 
 - [ ] convert double to long
 - [ ] create JavaDocs and API documentation
 - [ ] perform testing
