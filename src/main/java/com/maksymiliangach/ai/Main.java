@@ -11,25 +11,23 @@ public class Main {
     public static void main(String[] args) throws IOException{
         JDataFrame df = JDataFrame.loadCSV("src/main/java/com/maksymiliangach/ai/DataManager/real_estate_dataset.csv");
         //TODO: make method `getColumns(arg 1, ..., arg n)` which returns double[i][j], where i is a feature and j is sample of feature i
-        Double[] X = df.getColumn(1);
+        Double[] X1 = df.getColumn(1);
+        Double[] X2 = df.getColumn(9);
         Double[] Y = df.getColumn(11);
         //TODO: make JDataFrame return double[] variables not Double[] wrapper class
-        double[] xTemp = java.util.Arrays.stream(X).mapToDouble(Double::doubleValue).toArray();
+        double[] x1Temp = java.util.Arrays.stream(X1).mapToDouble(Double::doubleValue).toArray();
+        double[] x2Temp = java.util.Arrays.stream(X2).mapToDouble(Double::doubleValue).toArray();
         double[] y = java.util.Arrays.stream(Y).mapToDouble(Double::doubleValue).toArray();
-        double[][] x = new double[1][xTemp.length];
-        for(int i = 0 ; i < xTemp.length ; i++) { x[0][i] = xTemp[i];}
+        double[][] x = new double[2][x1Temp.length];
+        for(int i = 0 ; i < x1Temp.length ; i++) { x[0][i] = x1Temp[i]; x[1][i] = x2Temp[i];}
 
 
-        LinearRegression model = new LinearRegression(0.0005, 100);
+        LinearRegression model = new LinearRegression(0.0000000950, 1_000_000);
         //LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         //model.setPlotter(plotter);
-        //model.setLogging(true);
-        //model.train(x, y);
+        model.setLogging(true);
+        model.train(x, y);
+        System.out.println(model.summary());
         //model.test(x, y);
-        System.out.println(x[0][0]);
-        System.out.println(x[0][1]);
-        System.out.println(x[0][2]);
-        System.out.println(x[0][3]);
-        System.out.println(x[1][0]);
     }
 }

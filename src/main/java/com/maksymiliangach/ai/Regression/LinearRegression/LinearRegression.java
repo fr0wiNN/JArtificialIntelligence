@@ -85,7 +85,8 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         }
         bias -= learningRate * biasGradient;
 
-        if(logging){
+        //TODO: have a logging variable for gradient diagnostics
+        if(logging && false){
             StringBuilder sb = new StringBuilder();
             sb.append("> Weights Gradients: ").append(Arrays.toString(weightGradients)).append("\n");
             sb.append("> Bias Gradient: ").append(biasGradient).append("\n");
@@ -120,8 +121,8 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         this.numSamples = inputs[0].length;
         this.numFeatures = inputs.length;
         this.weights = new double[numFeatures];
-        for(double w : weights) { w = 1; }
-        this.bias = 0;
+        for(double w : weights) { w = 1.0; }
+        this.bias = 0.0;
     }
 
     @Override
@@ -139,7 +140,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (logging && epoch % 1 == 0) {
+            if (logging && epoch % 10_000 == 0) {
                 System.out.printf("Epoch %d: Loss = %d\n", epoch, computeLoss(outputs, predictions));
                 if (plotter != null) { plotter.update(); }
             }
@@ -155,6 +156,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         sb.append("Learning Rate: ").append(learningRate).append("\n");
         sb.append("Weights: ").append(Arrays.toString(weights)).append("\n");
         sb.append("Bias: ").append(bias).append("\n");
+        sb.append("Total Loss: ").append(computeLoss(outputs, forward(inputs))).append("\n");
         return sb.toString();
     }
 
