@@ -30,17 +30,45 @@ public class LinearRegression implements RegressionModel {
 
     @Override
     public double[] forward(double[][] inputs) {
-        return new double[0];
+        double[] predictions = new double[numSamples];
+
+        for (int i = 0; i < numSamples; i++) {
+            double prediction = bias;
+            for (int j = 0 ; j < numFeatures ; j++) {
+                prediction += weights[j] * inputs[i][j];
+            }
+            predictions[i] = prediction;
+        }
+
+        return predictions;
     }
 
     @Override
-    public void backward(double[][] inputs, double[] outputs) {
+    public void backward(double[][] inputs, double[] outputs, double[] predictions) {
+        // Gradient initialization
+        double[] weightGradients = new double[numFeatures];
+        double biasGradient = 0;
 
+        // Calculate total loss values
+        long loss = computeLoss(outputs, predictions);
+
+        // Set gradients (Make it set gradients based on total loss function, since backward function is outside of scope for normalization after each epoch)
+        for (int i = 0; i < numFeatures; i++) {
+            weightGradients[i] = 2 * loss * inputs[i][i];
+        }
+        biasGradient += 2 * loss;
+
+        // Update weights and bias
     }
 
     @Override
-    public double computeLoss(double[] yTrue, double[] yPredicted) {
-        return 0;
+    public long computeLoss(double[] yTrue, double[] yPredicted) {
+        long loss = 0;
+        for (int i = 0; i < yTrue.length; i++) {
+            double error = yPredicted[i] - yTrue[i];
+            loss += (long) (error * error);
+        }
+        return loss/yTrue.length;
     }
 
     @Override
@@ -51,10 +79,13 @@ public class LinearRegression implements RegressionModel {
     @Override
     public double getBias() {return bias;}
 
-    public void setPlotter(LinearRegressionPlotter plotter) {this.plotter = plotter;}
+    public void setPlotter(LinearRegressionPlotter plotter) {
+        //TODO: if(numFeatures == plotter.numFeatures) - make sure that the plotter supports 3D rendering
+        if(numFeatures == 1) { this.plotter = plotter; }
+    }
 
     private void setUpTraining() {
-        this.numSamples = inputs.length;
+        this.numSamples = inputs[0].length;
         this.numFeatures = inputs.length;
         this.weights = new double[numFeatures];
         for(double w : weights) { w = 1; }
@@ -69,7 +100,17 @@ public class LinearRegression implements RegressionModel {
         setUpTraining();
 
         for(int epoch = 0 ; epoch < epochs ; epoch++) {
+            // Forward pass
+            double[] predictions = forward(inputs);
 
+            // Backward pass
+            backward(inputs, outputs, predictions);
+
+            // TODO: make logging more clever
+            if (epoch % 100 == 0) {
+                System.out.printf("Epoch %d: Loss = %d", epoch, computeLoss(outputs, predictions));
+                if (plotter != null) { plotter.update(); }
+            }
         }
     }
 
