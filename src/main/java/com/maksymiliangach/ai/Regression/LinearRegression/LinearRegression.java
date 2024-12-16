@@ -6,13 +6,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.maksymiliangach.ai.Model;
+import com.maksymiliangach.ai.ModelLogger;
 import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
 import com.maksymiliangach.ai.Regression.RegressionModel;
 
-public class LinearRegression implements RegressionModel {
+public class LinearRegression implements RegressionModel, ModelLogger {
     private double learningRate;
     private int epochs;
     private double[] weights;
@@ -22,6 +23,7 @@ public class LinearRegression implements RegressionModel {
     private int numSamples;
     private int numFeatures;
     private LinearRegressionPlotter plotter;
+    private boolean logging;
 
     public LinearRegression(double learningRate, int epochs) {
         this.learningRate = learningRate;
@@ -41,10 +43,10 @@ public class LinearRegression implements RegressionModel {
     public double[] forward(double[][] inputs) {
         double[] predictions = new double[numSamples];
 
-        for (int i = 0; i < numFeatures; i++) {
+        for (int i = 0; i < numSamples; i++) {
             double prediction = bias;
-            for (int j = 0 ; j < numSamples ; j++) {
-                prediction += weights[i] * inputs[i][j];
+            for (int j = 0 ; j < numFeatures ; j++) {
+                prediction += weights[j] * inputs[j][i];
             }
             predictions[i] = prediction;
         }
@@ -82,6 +84,13 @@ public class LinearRegression implements RegressionModel {
             weights[f] -= learningRate * weightGradients[f];
         }
         bias -= learningRate * biasGradient;
+
+        if(logging){
+            StringBuilder sb = new StringBuilder();
+            sb.append("> Weights Gradients: ").append(Arrays.toString(weightGradients)).append("\n");
+            sb.append("> Bias Gradient: ").append(biasGradient).append("\n");
+            System.out.print(sb.toString());
+        }
     }
 
     @Override
@@ -130,7 +139,7 @@ public class LinearRegression implements RegressionModel {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (epoch % 1 == 0) {
+            if (logging && epoch % 1 == 0) {
                 System.out.printf("Epoch %d: Loss = %d\n", epoch, computeLoss(outputs, predictions));
                 if (plotter != null) { plotter.update(); }
             }
@@ -156,4 +165,15 @@ public class LinearRegression implements RegressionModel {
     public double[] getOutputs() {
         return outputs;
     }
+
+    @Override
+    public void setLogging(boolean logging) {
+        this.logging = logging;
+    }
+
+    @Override
+    public boolean isLogging() {
+        return logging;
+    }
+
 }
