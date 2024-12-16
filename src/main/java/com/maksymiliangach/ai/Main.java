@@ -23,11 +23,13 @@ public class Main {
         LinearRegression model = new LinearRegression(0.0005, 100);
         //LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         //model.setPlotter(plotter);
-        model.setLogging(true);
-        model.train(x, y);
-        System.out.println(model.summary());
-        System.out.println(Double.MAX_VALUE); // I suppose that loss reached its maximum
+        //model.setLogging(true);
+        //model.train(x, y);
         //model.test(x, y);
-
+        System.out.println(x[0][0]);
+        System.out.println(x[0][1]);
+        System.out.println(x[0][2]);
+        System.out.println(x[0][3]);
+        System.out.println(x[1][0]);
     }
 }
