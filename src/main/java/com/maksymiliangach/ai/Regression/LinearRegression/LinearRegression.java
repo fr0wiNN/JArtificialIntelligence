@@ -14,8 +14,8 @@ import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
 import com.maksymiliangach.ai.Regression.RegressionModel;
 
 public class LinearRegression implements RegressionModel, ModelLogger {
-    private double learningRate;
-    private int epochs;
+    private final double learningRate;
+    private final int epochs;
     private double[] weights;
     private double bias;
     private double[][] inputs; // [i][j]: i feature contains j samples
@@ -77,13 +77,6 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         }
         bias += learningRate * biasGradient;
 
-        //TODO: have a logging variable for gradient diagnostics
-        if(logging && false){
-            StringBuilder sb = new StringBuilder();
-            sb.append("> Weights Gradients: ").append(Arrays.toString(weightGradients)).append("\n");
-            sb.append("> Bias Gradient: ").append(biasGradient).append("\n");
-            System.out.print(sb.toString());
-        }
     }
 
     @Override
@@ -137,9 +130,9 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (logging && epoch % 100_000 == 0) {
+            if (logging && epoch % 10_000 == 0) {
                 System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions));
-                if (plotter != null) { plotter.update(); }
+                if (plotter != null) { plotter.update(epoch, computeLoss(outputs, predictions)); }
             }
         }
     }
