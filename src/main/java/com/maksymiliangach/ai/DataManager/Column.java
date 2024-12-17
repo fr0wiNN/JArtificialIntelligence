@@ -7,20 +7,20 @@ public class Column {
     private String name;
     private List<Double> data;
 
-    Column(String name){
+    public Column(String name){
         this.name = name;
         this.data = new ArrayList<>();
     }
 
     public String getName() { return  name;}
-    public void add(Double value) { this.data.add(value); }
-    public Double getRow(int e) { return data.get(e); }
-    public Double[] toArray() {
+    public void add(double value) { this.data.add(value); }
+    public double getRow(int e) { return data.get(e); }
+    public double[] toArray() {
         Double[] array = new Double[data.size()];
         for(int x = 0; x<data.size() ; x++){
             array[x] = data.get(x);
         }
-        return array;
+        return java.util.Arrays.stream(array).mapToDouble(Double::doubleValue).toArray();
     }
 
 }
