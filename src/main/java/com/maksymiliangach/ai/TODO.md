@@ -1,6 +1,7 @@
 # Library TODO List / Ideas List
 
-- [ ] create plotter for total loss *vs* epoch
+- [ ] write README.md for flex
+- [x] create plotter for total loss *vs* epoch
 - [ ] implement dynamic learning rate
 - [ ] create 3D plotting for linear regression - do it smart
 - [ ] crete smart logging system - make `Logger` interface and add loggers to models using e.g. `setLogger(new SimpleLogger())`
