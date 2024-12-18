@@ -2,10 +2,7 @@ package com.maksymiliangach.ai.DataManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -19,10 +16,25 @@ public class JDataFrame{
     private int width;
     private int height;
     private List<Column> data;
+    public int getWidth() { return width;}
+    public int getHeight() { return height;}
     private JDataFrame(){
         data = new ArrayList<>();
         this.width = 0;
         this.height = 0;
+    }
+
+    //Constructor for copying
+    private JDataFrame(JDataFrame original) {
+        this.regex = original.regex;
+        this.fileName = original.fileName;
+        this.sc = original.sc;
+        this.width = original.width;
+        this.height = original.height;
+        this.data = new ArrayList<>();
+        for (Column col : original.data) {
+            this.data.add(col.copy());
+        }
     }
 
     public static JDataFrame loadCSV(String filename) throws IOException {
@@ -32,6 +44,10 @@ public class JDataFrame{
         dataFrame.sc.useDelimiter("\n");
         dataFrame.create();
         return dataFrame;
+    }
+
+    public JDataFrame copy() {
+        return new JDataFrame(this);
     }
 
     private void create(){
@@ -62,12 +78,51 @@ public class JDataFrame{
         }
     }
 
-    public Double[] getRow(int index) {
-        Double[] row = new Double[width];
+    public double[] getRow(int index) {
+        double[] row = new double[width];
         for (int i = 0; i < width; i++) {
             row[i] = data.get(i).getRow(index);
         }
         return row;
+    }
+
+    //TODO: make this function accept double[] instead of columns indices - MAKE IT MORE CLEVER
+    // Example usage: setColumnNames({c1, c2, c3}, {"Name_1", "Name_2", "Name_3"})
+    public void setColumnNames(int[] columnsIndices, String[] names) {
+        for (int i = 0; i < columnsIndices.length; i++) {
+            data.get(columnsIndices[i]).setName(names[i]);
+        }
+    }
+
+    //TODO: find better ways of shuffling the data;
+
+    public void removeRow(int index) {
+        for (int i = 0; i < width; i++) {
+            data.get(i).removeRow(index);
+        }
+        height--;
+    }
+    private void appendRow(double[] rowToAdd) {
+        for (int i = 0; i < width; i++) {
+            data.get(i).add(rowToAdd[i]);
+        }
+        height++;
+    }
+
+    public int seed = 2137;
+    public int shufflePower = 10;
+
+    @Deprecated
+    public void shuffle() {
+        Random rand = new Random(seed);
+        for (int i = 0; i < height * shufflePower; i++) {
+            int columnToShuffleIndex = rand.nextInt(height);
+            double[] rowToShuffle = getRow(columnToShuffleIndex);
+            //Remove Row
+            removeRow(columnToShuffleIndex);
+            //Append Row
+            appendRow(rowToShuffle);
+        }
     }
 
     public void drop(int... indices) {
@@ -108,6 +163,10 @@ public class JDataFrame{
     }
 
     //TODO: create clear documentation on how this function works
+    //df.addCustomColumn("Flex_Score", Main::socialIndex, sf, gs, ls);
+    //private static double socialIndex(double[] v){
+    //        return ((v[0] + v[1]) * v[2]);
+    //    }
     public void addCustomColumn(String name, ColumnFormula formula, double[]... columns) {
         double[] newColumnData = new double[height];
         for (int i = 0; i < height; i++) {
@@ -158,7 +217,7 @@ public class JDataFrame{
     }
 
     //TODO: smash or pass ?
-    public String head() { return buildHead(false, 5); }
+    public String head() { return buildHead(true, 5); }
     public String head(boolean printIndices) { return buildHead(printIndices, 5); }
     public String head(int n) { return buildHead(false, n); }
     public String head(boolean printIndices, int n) { return buildHead(printIndices, n); }
