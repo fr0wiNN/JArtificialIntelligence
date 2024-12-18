@@ -32,7 +32,7 @@ public class Main {
 
         LinearRegression model = new LinearRegression(0.00000210, 1_000_000);
 
-        model.setLogging(true);
+        // model.setLogging(true);
 
         LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         plotter.setDisplayDataPlot(true)
