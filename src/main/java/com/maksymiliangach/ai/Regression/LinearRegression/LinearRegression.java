@@ -138,6 +138,39 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     }
 
     @Override
+    public double validate(double[][] testInputs, double[] testOutputs) {
+        double[] predictions = new double[testInputs[0].length];
+
+        // For each sample
+        for (int s = 0; s < testInputs[0].length; s++) {
+            double[] sampleValues = new double[testInputs.length]; // Array for holding sample value for ith feature
+            for (int i = 0; i < testInputs.length; i++) {
+                sampleValues[i] = testInputs[i][s];
+            }
+            predictions[s] = predict(sampleValues);
+        }
+        return meanSquaredError(predictions, testOutputs);
+    }
+
+    @Override
+    public double predict(double[] inputs) {
+        double prediction = bias;
+        for (int i = 0; i < inputs.length; i++) {
+            prediction += weights[i] * inputs[i];
+        }
+        return prediction;
+    }
+
+    //TODO: probably, this function is implemented somewhere in this class
+    private double meanSquaredError(double[] predictions, double[] actuals){
+        double sum = 0.0;
+        for (int i = 0; i < predictions.length; i++) {
+            sum += Math.pow( predictions[i] - actuals[i] , 2);
+        }
+        return sum / predictions.length;
+    }
+
+    @Override
     public String summary() {
         StringBuilder sb = new StringBuilder();
         sb.append("========================\n");

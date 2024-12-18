@@ -3,6 +3,7 @@ package com.maksymiliangach.ai;
 import java.io.IOException;
 
 import com.maksymiliangach.ai.DataManager.JDataFrame;
+import com.maksymiliangach.ai.DataManager.JDataSplitter;
 import com.maksymiliangach.ai.Regression.*;
 import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
 import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
@@ -16,18 +17,18 @@ public class Main {
 
         df.drop(0,2,3,4,5,6,7,10);
 
-        //System.out.println(df.head(true));
-
-        // Get JDataFrame column values
-        double[] sf = df.getColumn(0);
-        double[] gs = df.getColumn(1);
-        double[] ls = df.getColumn(2);
-
-        df.addCustomColumn("Flex_Score", Main::socialIndex, sf, gs, ls);
-
-        //df.drop(0,1,2);
+        JDataFrame[] slitDataFrames = JDataSplitter.split(df, 0.8, true);
+        JDataFrame trainingDF = slitDataFrames[0];
+        JDataFrame testingDF = slitDataFrames[1];
 
         System.out.println(df.head(true));
+
+        // Get JDataFrame column values
+        double[][] trainingInputData = trainingDF.getColumns(0, 1, 2);
+        double[]   trainingOutputData = trainingDF.getColumn(3);
+
+        double[][] testingInputData = testingDF.getColumns(0, 1, 2);
+        double[]   testingOutputData = testingDF.getColumn(3);
 
         // Final calculation:
         // Weights: [932.9325849702775, 728.7543504566551, 4145.063046083078]
@@ -37,10 +38,11 @@ public class Main {
         // prediction(sf, gs, ls) = 932.93 * sf + 728.75 * gs + 4145.06 * ls + 375668.45
         // prediction(143.63, 48.00, 8.29) ~ 602134.81
         // prediction(143.63, 48.00, 8.29) = 932.93 * 143.63 + 728.75 * 48.00 + 4145.06 * 8.29 + 375668.45 = 579,029.51
-        var x = df.getColumns(0, 1, 2);
-        var y = df.getColumn(3);
+        //var x = df.getColumns(0, 1, 2);
+        //var y = df.getColumn(3);
 
-        LinearRegression model = new LinearRegression(0.00000410, 10_000_000);
+        LinearRegression model = new LinearRegression(0.00000210, 1_000_000);
+
         model.setLogging(true);
 
         LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
@@ -51,9 +53,13 @@ public class Main {
 
         model.setPlotter(plotter);
 
-        model.train(x,y);
+        model.train(trainingInputData, trainingOutputData);
 
         System.out.println(model.summary());
+
+        System.out.printf("Total Loss for Training Data: %f\n", model.validate(trainingInputData, trainingOutputData));
+        System.out.printf("Total Loss for Testing Data: %f\n", model.validate(testingInputData, testingOutputData));
+
 
         // TODO create a method for getting better input array for training - think of good name for such function
 
@@ -86,7 +92,4 @@ public class Main {
         //System.out.println(model.summary());
     }
 
-    private static double socialIndex(double[] v){
-        return ((v[0] + v[1]) * v[2]);
-    }
 }
