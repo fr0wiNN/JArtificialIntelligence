@@ -130,8 +130,8 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             backward(inputs, outputs, predictions);
 
             // TODO: make logging more clever
-            if (logging && epoch % 10_000 == 0) {
-                System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions));
+            if (epoch % 10_000 == 0) {
+                if(logging) { System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions)); }
                 if (plotter != null) { plotter.update(epoch, computeLoss(outputs, predictions)); }
             }
         }
