@@ -30,17 +30,6 @@ public class Main {
         double[][] testingInputData = testingDF.getColumns(0, 1, 2);
         double[]   testingOutputData = testingDF.getColumn(3);
 
-        // Final calculation:
-        // Weights: [932.9325849702775, 728.7543504566551, 4145.063046083078]
-        // Bias: 375668.4561292953
-
-        // sf, gs, ls
-        // prediction(sf, gs, ls) = 932.93 * sf + 728.75 * gs + 4145.06 * ls + 375668.45
-        // prediction(143.63, 48.00, 8.29) ~ 602134.81
-        // prediction(143.63, 48.00, 8.29) = 932.93 * 143.63 + 728.75 * 48.00 + 4145.06 * 8.29 + 375668.45 = 579,029.51
-        //var x = df.getColumns(0, 1, 2);
-        //var y = df.getColumn(3);
-
         LinearRegression model = new LinearRegression(0.00000210, 1_000_000);
 
         model.setLogging(true);
