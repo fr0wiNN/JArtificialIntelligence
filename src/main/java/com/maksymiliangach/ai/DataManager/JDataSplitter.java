@@ -12,8 +12,6 @@ public class JDataSplitter {
 
         JDataFrame dfTrainCopy = df.copy();
         JDataFrame dfTestCopy = df.copy();
-        dfTestCopy.removeRow(0);
-        System.out.println(dfTrainCopy.getColumn(0).length);
 
         for (int i = 0; i < testSize; i++) {
             dfTrainCopy.removeRow(trainSize);
