@@ -5,6 +5,6 @@ public class JFormulas {
     //TODO: Write very clear documentation on how to use custom made formulas.
     // Make them give clear information on what the `v` size is.
     // They should also provide examples
-    public static double addAndSquare(double... v) { return Math.sqrt(v[0] + v[1]); }
-    public static double multiply(double... v) { return v[0] * v[1];}
+    public static double addAndSquare(double... f) { return Math.sqrt(f[0] + f[1]); }
+    public static double add(double... f) { return f[0] + f[1];}
 }
