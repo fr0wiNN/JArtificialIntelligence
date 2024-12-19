@@ -5,5 +5,4 @@ import java.io.Serializable;
 
 public interface Model extends Serializable {
     default String summary() { return "Generic Model"; }
-
 }
