@@ -1,19 +1,14 @@
 package com.maksymiliangach.ai.Regression.LinearRegression;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
-import javax.swing.*;
 
-import com.maksymiliangach.ai.Model;
-import com.maksymiliangach.ai.ModelLogger;
+import com.maksymiliangach.ai.Logger.JLogger;
 import com.maksymiliangach.ai.Plotter.LinearRegressionPlotter;
 import com.maksymiliangach.ai.Regression.RegressionModel;
 
-public class LinearRegression implements RegressionModel, ModelLogger {
+public class LinearRegression implements RegressionModel {
+    private String modelName = "LinearRegression Model";
     private final double learningRate;
     private final int epochs;
     private double[] weights;
@@ -23,11 +18,12 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     private int numSamples;
     private int numFeatures;
     private LinearRegressionPlotter plotter;
-    private boolean logging;
+    private JLogger logger;
 
     public LinearRegression(double learningRate, int epochs) {
         this.learningRate = learningRate;
         this.epochs = epochs;
+        this.logger = JLogger.DEFAULT_LOGGER;
     }
 
     @Override
@@ -80,7 +76,7 @@ public class LinearRegression implements RegressionModel, ModelLogger {
     }
 
     @Override
-    public double computeLoss(double[] yTrue, double[] yPredicted) {
+    public double computeTotalLoss(double[] yTrue, double[] yPredicted) {
         double loss = 0;
         for (int i = 0; i < yTrue.length; i++) {
             double error = yPredicted[i] - yTrue[i];
@@ -129,10 +125,9 @@ public class LinearRegression implements RegressionModel, ModelLogger {
             // Backward pass
             backward(inputs, outputs, predictions);
 
-            // TODO: make logging more clever
             if (epoch % 10_000 == 0) {
-                if(logging) { System.out.printf("Epoch %d: Loss = %f\n", epoch, computeLoss(outputs, predictions)); }
-                if (plotter != null) { plotter.update(epoch, computeLoss(outputs, predictions)); }
+                logger.log(computeTotalLoss(outputs, predictions), epoch, epochs);
+                if (plotter != null) { plotter.update(epoch, computeTotalLoss(outputs, predictions)); }
             }
         }
     }
@@ -143,13 +138,13 @@ public class LinearRegression implements RegressionModel, ModelLogger {
 
         // For each sample
         for (int s = 0; s < testInputs[0].length; s++) {
-            double[] sampleValues = new double[testInputs.length]; // Array for holding sample value for ith feature
+            double[] sampleValues = new double[testInputs.length];
             for (int i = 0; i < testInputs.length; i++) {
                 sampleValues[i] = testInputs[i][s];
             }
             predictions[s] = predict(sampleValues);
         }
-        return meanSquaredError(predictions, testOutputs);
+        return computeTotalLoss(testOutputs, predictions);
     }
 
     @Override
@@ -161,25 +156,17 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         return prediction;
     }
 
-    //TODO: probably, this function is implemented somewhere in this class
-    private double meanSquaredError(double[] predictions, double[] actuals){
-        double sum = 0.0;
-        for (int i = 0; i < predictions.length; i++) {
-            sum += Math.pow( predictions[i] - actuals[i] , 2);
-        }
-        return sum / predictions.length;
-    }
-
     @Override
     public String summary() {
         StringBuilder sb = new StringBuilder();
         sb.append("========================\n");
-        sb.append("Linear Regression Model:\n");
+        sb.append(modelName).append("\n");
+        sb.append("Type: Linear Regression with ").append(weights.length).append(" input feature(s)\n");
         sb.append("Epochs: ").append(epochs).append("\n");
         sb.append("Learning Rate: ").append(learningRate).append("\n");
         sb.append("Weights: ").append(Arrays.toString(weights)).append("\n");
         sb.append("Bias: ").append(bias).append("\n");
-        sb.append("Total Loss: ").append(computeLoss(outputs, forward(inputs))).append("\n");
+        sb.append("Total Loss: ").append(computeTotalLoss(outputs, forward(inputs))).append("\n");
         return sb.toString();
     }
 
@@ -191,14 +178,26 @@ public class LinearRegression implements RegressionModel, ModelLogger {
         return outputs;
     }
 
-    @Override
-    public void setLogging(boolean logging) {
-        this.logging = logging;
+    public void setLogger(JLogger logger) { this.logger = logger; }
+
+    public void setModelName(String modelName) { this.modelName = modelName; }
+
+    public boolean save(String name) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(name))) {
+            this.plotter = null;
+            oos.writeObject(this);
+            return true;
+        } catch (IOException io) {
+            return false;
+        }
     }
 
-    @Override
-    public boolean isLogging() {
-        return logging;
+    public static LinearRegression load(String name) throws IOException{
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(name))) {
+            return (LinearRegression) ois.readObject();
+        } catch (ClassNotFoundException cnf) {
+            System.err.println("Error while converting Object to Model class");
+            return new LinearRegression(-1,-1);
+        }
     }
-
 }
