@@ -9,6 +9,8 @@
 - I learned how to write good API for classes
 - I learned how to use Design Patterns
 - I learned coding workflow
+- I learned how to reference Functions using '::' expression
+- I learned how to spot reference passing instead of objects copy.
 
 ## What I want to learn
 - How to write tests
