@@ -1,6 +1,7 @@
 # Library TODO List / Ideas List
 
 ## TODO
+- [ ] ack kaggle for my dataset
 - [ ] create visual logger that shows progress as a progress bar (current epoch / epochs * 100 = percentage of completion)
 - [ ] add kill switch for model training **or** show current `weights` and `bias`
 - [ ] add name variable for LinearRegression, and add it to `LinearRegression.summary()`
