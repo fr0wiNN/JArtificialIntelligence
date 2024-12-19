@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         // Load the data from a CSV file
-        JDataFrame df = JDataFrame.loadCSV("src/main/java/com/maksymiliangach/ai/DataManager/real_estate_dataset.csv");
+        JDataFrame df = JDataFrame.loadCSV("datasets/real_estate_dataset.csv");
 
         // Visualize the data
         System.out.println("Generic Dataset:");

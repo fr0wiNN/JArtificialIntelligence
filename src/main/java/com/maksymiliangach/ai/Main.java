@@ -11,7 +11,7 @@ import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 public class Main {
     public static void main(String[] args) throws IOException{
         // Define JDataFrame
-        JDataFrame df = JDataFrame.loadCSV("src/main/java/com/maksymiliangach/ai/DataManager/real_estate_dataset.csv");
+        JDataFrame df = JDataFrame.loadCSV("datasets/real_estate_dataset.csv");
 
         //System.out.println(df.head(true));
 
