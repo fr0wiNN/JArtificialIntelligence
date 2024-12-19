@@ -3,6 +3,7 @@ package examples;
 import java.io.IOException;
 import com.maksymiliangach.ai.DataManager.JDataFrame;
 import com.maksymiliangach.ai.DataManager.JDataSplitter;
+import com.maksymiliangach.ai.Logger.JLogger;
 import com.maksymiliangach.ai.Regression.LinearRegression.LinearRegression;
 
 public class LinearRegressionExample {
@@ -24,7 +25,7 @@ public class LinearRegressionExample {
         LinearRegression model = new LinearRegression(0.00000210, 30_000_000);
 
         // Log model training progress
-        model.setLogging(true);
+        model.setLogger(JLogger.SIMPLE_LOGGER);
 
         // Train linear regression model
         model.train(trainingInputData, trainingOutputData);
