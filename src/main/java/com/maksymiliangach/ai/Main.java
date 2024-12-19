@@ -36,9 +36,9 @@ public class Main {
 
         LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         plotter.setDisplayDataPlot(true)
-                .setDisplayLossPlot(true)
-                .setDataLabels("Linear Regression Visualization", "Square Feet", "Price")
-                .setLossLabels("Total Loss Visualization", "Epoch", "Loss Function Value");
+               .setDisplayLossPlot(true)
+               .setDataLabels("Linear Regression Visualization", "Square Feet", "Price")
+               .setLossLabels("Total Loss Visualization", "Epoch", "Loss Function Value");
 
         model.setPlotter(plotter);
 
@@ -58,7 +58,7 @@ public class Main {
 
         // Define LinearRegression model
         // TODO: create builder class for LinearRegression model creation (set hyper parameters: lr, modelName or load from config)
-        //LinearRegression model = new LinearRegression(0.0000170, 1_000_000);
+        //LinearRegression model = new LinearRegressionExample(0.0000170, 1_000_000);
         //model.setLogging(true);
 
         // Define LinearRegressionPlotter for data visualisation
