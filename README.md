@@ -86,13 +86,9 @@ model.train(trainingInputData, trainingOutputData);
 
 // Now the plotter is assigned and starts visualizing the training process
 ```
-<center>
-    <p float="left">
-        <img src="images/linear_data_plot.png" height="200"/>
-        <img src="images/total_loss_plot.png" height="200"/>
-    </p>
-</center>
-<center>Example Training Visualization</center>
+Data and Regression Line Visualization | Total Loss Visualization
+:---:|:---:
+![](images/linear_data_plot.png) | ![](images/total_loss_plot.png)
 
 
 ## Acknowledgements
