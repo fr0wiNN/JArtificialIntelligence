@@ -88,8 +88,8 @@ model.train(trainingInputData, trainingOutputData);
 ```
 <center>
     <p float="left">
-        <img src="images/linear_data_plot.png" height="400"/>
-        <img src="images/total_loss_plot.png" height="400"/>
+        <img src="images/linear_data_plot.png" height="300"/>
+        <img src="images/total_loss_plot.png" height="300"/>
     </p>
 </center>
 <center>Example Training Visualization</center>
