@@ -86,10 +86,9 @@ model.train(trainingInputData, trainingOutputData);
 
 // Now the plotter is assigned and starts visualizing the training process
 ```
-Data and Regression Line Visualization | Total Loss Visualization
-:---:|:---:
-![](images/linear_data_plot.png) | ![](images/total_loss_plot.png)
-
+| Data and Regression Line Visualization |    Total Loss Visualization     |
+|:--------------------------------------:|:-------------------------------:|
+|    ![](images/linear_data_plot.png)    | ![](images/total_loss_plot.png) |
 
 ## Acknowledgements
 This project uses XChart plotting library for visualizations. You can find more information about the library [here](https://github.com/knowm/XChart).  
