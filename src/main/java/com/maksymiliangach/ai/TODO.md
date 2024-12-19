@@ -14,6 +14,6 @@
 - [x] add option to get multiple columns e.g. `JDataFrame.getColumns( 1 , ... , n)` using dynamic input.
 - [x] create option to drop columns in `JDataFrame`. Examples: `JDataFrame.drop(1)` or `JDataFrame.drop(1, 5, 7)` or `JDataFrame.drop("ID", "Sales")`. Make sure to return new instance of dataframes with columns appropriately shifted. 
 - [x] add feature engineering option to `JDataFrame` using lambda expressions. e.g. `JDataFrame.createColumn( (c1, c2, c3) -> { c1 / (c2 + c3)} )` 
-
+- [ ] change examples to feature LinearRegressionBuilder class way of creating models
 ## Errors to Fix
 - [x] **`LinearRegressionPlotter` is dependent on `LinearRegression.logging` variable.**  **When `logging` is set to default:false, then no data is shown on both charts**
