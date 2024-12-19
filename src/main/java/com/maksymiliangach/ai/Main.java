@@ -30,15 +30,15 @@ public class Main {
         double[][] testingInputData = testingDF.getColumns(0, 1, 2);
         double[]   testingOutputData = testingDF.getColumn(3);
 
-        LinearRegression model = new LinearRegression(0.00000210, 1_000_000);
+        LinearRegression model = new LinearRegression(0.00000210, 30_000_000);
 
         // model.setLogging(true);
 
         LinearRegressionPlotter plotter = new LinearRegressionPlotter(model);
         plotter.setDisplayDataPlot(true)
                 .setDisplayLossPlot(true)
-                .setDataLabels("Linear Regression Visualization", "Flex Score", "Price")
-                .setLossLabels("Total Loss Visualisation", "Epoch", "Loss Function Value");
+                .setDataLabels("Linear Regression Visualization", "Square Feet", "Price")
+                .setLossLabels("Total Loss Visualization", "Epoch", "Loss Function Value");
 
         model.setPlotter(plotter);
 
