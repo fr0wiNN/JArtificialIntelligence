@@ -1,18 +1,13 @@
 package com.maksymiliangach.ai.DataManager;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class JDataFrame{
-    private String regex = ",";
-    // TODO: create fields for custom delimiter and regex
-    // Pay attention to static scope!
-    //private String delimiter = "\n";
     private String fileName;
-    private Scanner sc;
     private int width;
     private int height;
     private List<Column> data;
@@ -26,9 +21,7 @@ public class JDataFrame{
 
     //Constructor for copying
     private JDataFrame(JDataFrame original) {
-        this.regex = original.regex;
         this.fileName = original.fileName;
-        this.sc = original.sc;
         this.width = original.width;
         this.height = original.height;
         this.data = new ArrayList<>();
@@ -40,9 +33,28 @@ public class JDataFrame{
     public static JDataFrame loadCSV(String filename) throws IOException {
         JDataFrame dataFrame = new JDataFrame();
         dataFrame.fileName = filename;
-        dataFrame.sc = new Scanner(new File(filename));
-        dataFrame.sc.useDelimiter("\n");
-        dataFrame.create();
+
+        BufferedReader reader;
+        if(filename.startsWith("http://") || filename.startsWith("https://")) {
+            // File is stored on remote server
+            URL url = new URL(filename);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        } else {
+            // File is stored locally
+            reader = new BufferedReader(new FileReader(filename));
+        }
+
+        // Read the file header
+        String header = reader.readLine();
+        dataFrame.createColumns(header);
+
+        // Read rows
+        String line;
+        while((line = reader.readLine()) != null){
+            String[] values = line.split(",");
+            double[] row = Arrays.stream(values).mapToDouble(Double::parseDouble).toArray();
+            dataFrame.appendRow(row);
+        }
         return dataFrame;
     }
 
@@ -50,31 +62,13 @@ public class JDataFrame{
         return new JDataFrame(this);
     }
 
-    private void create(){
-        createColumns();
-        createRows();
-        //getColumnContent();
-    }
-
-    private void createColumns(){
-        String head = sc.next();
-        String[] headSplit = head.split(regex);
+    private void createColumns(String header){
+        String[] headSplit = header.split(",");
         this.width = headSplit.length;
         String[] columnNames = new String[this.width];
         System.arraycopy(headSplit, 0, columnNames, 0, headSplit.length);
         for(String s : columnNames) {
             data.add(new Column(s));
-        }
-    }
-
-    private void createRows() {
-        //TODO: detect datatype
-        while(sc.hasNext()){
-            String[] row = sc.next().split(",");
-            for (int x = 0 ; x < width ; x++) {
-                data.get(x).add(Double.parseDouble(row[x]));
-            }
-            height++;
         }
     }
 
@@ -109,12 +103,12 @@ public class JDataFrame{
         height++;
     }
 
-    public int seed = 2137;
+    public int shuffleSeed = 2137;
     public int shufflePower = 10;
 
     @Deprecated
     public void shuffle() {
-        Random rand = new Random(seed);
+        Random rand = new Random(shuffleSeed);
         for (int i = 0; i < height * shufflePower; i++) {
             int columnToShuffleIndex = rand.nextInt(height);
             double[] rowToShuffle = getRow(columnToShuffleIndex);
