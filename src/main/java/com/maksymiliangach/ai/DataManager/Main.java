@@ -9,6 +9,8 @@ public class Main {
         // 1. Navigate to directory with selected data set
         // 2. Get IP using `hostname -I`, first IP is the desired one
         // 3. Set up python http using: `python3 -m http.server`
+        //TODO: Critical error when trying to access dataset with non-numeric values
+        //JDataFrame df = JDataFrame.loadCSV("http://192.168.15.51:8000/fraud.csv");
         JDataFrame df = JDataFrame.loadCSV("http://192.168.15.51:8000/real_estate_dataset.csv");
         //JDataFrame df = JDataFrame.loadCSV("datasets/real_estate_dataset.csv");
 
