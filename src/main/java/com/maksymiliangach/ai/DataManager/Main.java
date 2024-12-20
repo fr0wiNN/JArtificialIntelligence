@@ -4,8 +4,13 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        // Load the data from a CSV file
-        JDataFrame df = JDataFrame.loadCSV("datasets/real_estate_dataset.csv");
+        // Load the data from a remote CSV file
+        // To set up csv file for remote access:
+        // 1. Navigate to directory with selected data set
+        // 2. Get IP using `hostname -I`, first IP is the desired one
+        // 3. Set up python http using: `python3 -m http.server`
+        JDataFrame df = JDataFrame.loadCSV("http://192.168.15.51:8000/real_estate_dataset.csv");
+        //JDataFrame df = JDataFrame.loadCSV("datasets/real_estate_dataset.csv");
 
         // Visualize the data
         System.out.println("Generic Dataset:");
